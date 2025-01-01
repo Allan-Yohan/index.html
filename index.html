@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulateur Akiba</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 400px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+        }
+        select, input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        button {
+            width: 100%;
+            background: #007bff;
+            color: #fff;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            margin-top: 15px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .output {
+            margin-top: 20px;
+            padding: 10px;
+            background: #e9ecef;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Simulateur Akiba</h1>
+
+        <label for="transaction">Sens de la transaction :</label>
+        <select id="transaction">
+            <option value="gabon-senegal">Gabon → Sénégal</option>
+            <option value="senegal-gabon">Sénégal → Gabon</option>
+        </select>
+
+        <label for="amount">J'envoie :</label>
+        <input type="number" id="amount" placeholder="Entrez le montant" min="2000" max="500000">
+
+        <label for="fees">Frais :</label>
+        <input type="text" id="fees" disabled>
+
+        <label for="total">Total à envoyer à Akiba :</label>
+        <input type="text" id="total" disabled>
+
+        <label for="recipientAmount">Le bénéficiaire recevra :</label>
+        <input type="text" id="recipientAmount" disabled>
+
+        <label for="recipientName">Nom du bénéficiaire :</label>
+        <input type="text" id="recipientName" placeholder="Nom du bénéficiaire">
+
+        <label for="recipientPhone">Numéro de téléphone du bénéficiaire :</label>
+        <input type="text" id="recipientPhone" placeholder="Airtel ou Wave">
+
+        <button id="whatsapp">Continuer sur WhatsApp</button>
+    </div>
+
+    <script>
+        const transactionSelect = document.getElementById('transaction');
+        const amountInput = document.getElementById('amount');
+        const feesInput = document.getElementById('fees');
+        const totalInput = document.getElementById('total');
+        const recipientAmountInput = document.getElementById('recipientAmount');
+        const recipientNameInput = document.getElementById('recipientName');
+        const recipientPhoneInput = document.getElementById('recipientPhone');
+        const whatsappButton = document.getElementById('whatsapp');
+
+        const fees = {
+            'gabon-senegal': 0.09,
+            'senegal-gabon': 0.06
+        };
+
+        const modes = {
+            'gabon-senegal': 'Airtel Money',
+            'senegal-gabon': 'Wave'
+        };
+
+        const currencies = {
+            'gabon-senegal': 'FCFA',
+            'senegal-gabon': 'FCFA'
+        };
+
+        amountInput.addEventListener('input', calculateFields);
+
+        function calculateFields() {
+            const transaction = transactionSelect.value;
+            let amount = parseFloat(amountInput.value) || 0;
+            if (amount > 500000) amount = 500000;
+            if (amount < 2000) amount = 2000;
+
+            const feeRate = fees[transaction];
+            const fee = Math.round(amount * feeRate);
+            const total = amount + fee;
+            const recipientAmount = amount;
+
+            feesInput.value = fee + ' ' + currencies[transaction];
+            totalInput.value = total + ' ' + currencies[transaction];
+            recipientAmountInput.value = recipientAmount + ' ' + currencies[transaction];
+        }
+
+        whatsappButton.addEventListener('click', () => {
+            const transaction = transactionSelect.value;
+            const amount = parseFloat(amountInput.value);
+            const feeRate = fees[transaction];
+            const fee = Math.round(amount * feeRate);
+            const total = amount + fee;
+            const recipientAmount = amount;
+            const recipient = recipientNameInput.value;
+            const phone = recipientPhoneInput.value;
+
+            if (!recipient || isNaN(amount) || amount <= 0 || !phone) {
+                alert('Veuillez remplir tous les champs avant de continuer.');
+                return;
+            }
+
+            const phonePattern = transaction === 'gabon-senegal'
+                ? /^(77\d{7}|78\d{7}|76\d{7}|70\d{7}|75\d{7})$/ // Wave
+                : /^(077\d{6}|074\d{6})$/; // Airtel Gabon
+                
+            if (!phonePattern.test(phone)) {
+                alert('Veuillez entrer un numéro valide.');
+                return;
+            }
+
+            const transactionLabel = transaction === 'gabon-senegal' ? 'Gabon → Sénégal' : 'Sénégal → Gabon';
+            const whatsappNumber = '+33749903219';
+            const message = `Hello team Akiba.\n\n` +
+                `J'aimerais faire une transaction *${transactionLabel}*.\n\n` +
+                `*Détails*\n` +
+                `Je vous envoie *${total} ${currencies[transaction]}* par _${modes[transaction]}_.\n` +
+                `Le bénéficiaire recevra *${recipientAmount} ${currencies[transaction]}*.\n\n` +
+                `*Bénéficiaire*\n` +
+                `Nom : ${recipient}\n` +
+                `Numéro : ${phone}`;
+
+            const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+            window.open(whatsappUrl, '_blank');
+        });
+
+        calculateFields(); // Initialize fields on load
+    </script>
+</body>
+</html>
