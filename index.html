@@ -72,13 +72,13 @@
         <input type="number" id="amount" placeholder="Entrez le montant" min="5000" max="500000">
 
         <label for="fees">Frais :</label>
-        <input type="text" id="fees" enable>
+        <input type="text" id="fees" disabled>
 
         <label for="total">Total à envoyer à Akiba :</label>
-        <input type="text" id="total" enable>
+        <input type="text" id="total" disabled>
 
         <label for="recipientAmount">Le bénéficiaire recevra :</label>
-        <input type="text" id="recipientAmount" enable>
+        <input type="text" id="recipientAmount" disabled>
 
         <label for="recipientName">Nom du bénéficiaire :</label>
         <input type="text" id="recipientName" placeholder="Nom du bénéficiaire">
@@ -149,7 +149,7 @@
 
             const phonePattern = transaction === 'gabon-senegal'
                 ? /^(77\d{7}|78\d{7}|76\d{7}|70\d{7}|75\d{7})$/ // Wave ou OM
-                : /^(077\d{6}|074\d{6}|07\{6}|04\{6})$/; // Airtel Gabon
+                : /^(077\d{6}|074\d{6}|07\d{6}|04\d{6})$/; // Airtel Gabon
                 
             if (!phonePattern.test(phone)) {
                 alert('Veuillez entrer un numéro valide.
