@@ -106,7 +106,7 @@
 
         const modes = {
             'gabon-senegal': 'Airtel Money',
-            'senegal-gabon': 'Wave', 'Orange Money'
+            'senegal-gabon': 'Wave / Orange Money'
         };
 
         const currencies = {
@@ -121,6 +121,7 @@
             let amount = parseFloat(amountInput.value) || 0;
             if (amount > 500000) amount = 500000;
             if (amount < 5000) amount = 5000;
+           
 
             const feeRate = fees[transaction];
             const fee = Math.round(amount * feeRate);
@@ -135,12 +136,8 @@
         whatsappButton.addEventListener('click', () => {
             const transaction = transactionSelect.value;
             const amount = parseFloat(amountInput.value);
-            const feeRate = fees[transaction];
-            const fee = Math.round(amount * feeRate);
-            const total = amount + fee;
-            const recipientAmount = amount;
-            const recipient = recipientNameInput.value;
-            const phone = recipientPhoneInput.value;
+            const recipient = recipientNameInput.value.trim();
+            const phone = recipientPhoneInput.value.trim();
 
             if (!recipient || isNaN(amount) || amount <= 0 || !phone) {
                 alert('Veuillez remplir tous les champs avant de continuer.');
@@ -148,12 +145,11 @@
             }
 
             const phonePattern = transaction === 'gabon-senegal'
-                ? /^(77\d{7}|78\d{7}|76\d{7}|70\d{7}|75\d{7})$/ // Wave ou OM
-                : /^(077\d{6}|074\d{6}|07\d{6}|04\d{6})$/; // Airtel Gabon
+                ? /^(77|78|76|70|75)\d{7}$/ // Sénégal
+                : /^(07|04|074|077)\d{6}$/; // Gabon
                 
             if (!phonePattern.test(phone)) {
-                alert('Veuillez entrer un numéro valide.
-                      'exemple 04/07xxxxxx ou 077/074xxxxxx');
+                alert('Veuillez entrer un numéro valide.');
                 return;
             }
 
@@ -162,11 +158,10 @@
             const message = `Hello team Akiba.\n\n` +
                 `J'aimerais faire une transaction *${transactionLabel}*.\n\n` +
                 `*Détails*\n` +
-                `Je vous envoie *${total} ${currencies[transaction]}* par _${modes[transaction]}_.\n` +
-                `Le bénéficiaire recevra *${recipientAmount} ${currencies[transaction]}*.\n\n` +
-                `*Bénéficiaire*\n` +
-                `Nom : ${recipient}\n` +
-                `Numéro : ${phone}`;
+                `Je vous envoie *${feesInput.value}*.\n` +
+                `Mode de paiement : ${modes[transaction]}.\n` +
+                `Le bénéficiaire recevra *${recipientAmountInput.value}*.\n\n` +
+                `*Bénéficiaire*\nNom : ${recipient}\nTéléphone : ${phone}`;
 
             const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
             window.open(whatsappUrl, '_blank');
