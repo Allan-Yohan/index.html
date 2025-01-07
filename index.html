@@ -133,40 +133,49 @@
             recipientAmountInput.value = recipientAmount + ' ' + currencies[transaction];
         }
 
-        whatsappButton.addEventListener('click', () => {
-            const transaction = transactionSelect.value;
-            const amount = parseFloat(amountInput.value);
-            const recipient = recipientNameInput.value.trim();
-            const phone = recipientPhoneInput.value.trim();
+      whatsappButton.addEventListener('click', () => {
+    const transaction = transactionSelect.value;
+    const amount = parseFloat(amountInput.value);
+    const feeRate = fees[transaction];
+    const fee = Math.round(amount * feeRate);
+    const total = amount + fee;
+    const recipient = recipientNameInput.value.trim();
+    const phone = recipientPhoneInput.value.trim();
 
-            if (!recipient || isNaN(amount) || amount <= 0 || !phone) {
-                alert('Veuillez remplir tous les champs avant de continuer.');
-                return;
-            }
+    // Vérification des champs obligatoires
+    if (!recipient || isNaN(amount) || amount <= 0 || !phone) {
+        alert('Veuillez remplir tous les champs avant de continuer.');
+        return;
+    }
 
-            const phonePattern = transaction === 'gabon-senegal'
-                ? /^(77|78|76|70|75)\d{7}$/ // Sénégal
-                : /^(07|04|074|077)\d{6}$/; // Gabon
-                
-            if (!phonePattern.test(phone)) {
-                alert('Veuillez entrer un numéro valide.');
-                return;
-            }
+    // Validation du numéro de téléphone selon le sens de la transaction
+    const phonePattern = transaction === 'gabon-senegal'
+        ? /^(77|78|76|70|75)\d{7}$/ // Sénégal
+        : /^(07|04|074|077)\d{6}$/; // Gabon
+        
+    if (!phonePattern.test(phone)) {
+        alert('Veuillez entrer un numéro valide.');
+        return;
+    }
 
-            const transactionLabel = transaction === 'gabon-senegal' ? 'Gabon → Sénégal' : 'Sénégal → Gabon';
-            const whatsappNumber = '+33749903219';
-            const message = `Hello team Akiba.\n\n` +
-                `J'aimerais faire une transaction *${transactionLabel}*.\n\n` +
-                `*Détails*\n` +
-                `Je vous envoie *${total} ${currencies[transaction]}* par _${modes[transaction]}_.\n` +
-                `Le bénéficiaire recevra *${recipientAmount} ${currencies[transaction]}*.\n\n` +
-                `*Bénéficiaire*\n` +
-                `Nom : ${recipient}\n` +
-                `Numéro : ${phone}`;
+    // Préparation des données pour le message
+    const transactionLabel = transaction === 'gabon-senegal' ? 'Gabon → Sénégal' : 'Sénégal → Gabon';
+    const whatsappNumber = '+33749903219';
+    const message = `Hello team Akiba.\n\n` +
+        `J'aimerais faire une transaction *${transactionLabel}*.\n\n` +
+        `*Détails*\n` +
+        `Je vous envoie *${total.toLocaleString()} ${currencies[transaction]}* ` +
+        `(montant saisi : ${amount.toLocaleString()} ${currencies[transaction]}, ` +
+        `frais : ${fee.toLocaleString()} ${currencies[transaction]}).\n` +
+        `Mode de paiement : ${modes[transaction]}.\n` +
+        `Le bénéficiaire recevra *${amount.toLocaleString()} ${currencies[transaction]}*.\n\n` +
+        `*Bénéficiaire*\nNom : ${recipient}\nTéléphone : ${phone}`;
 
-            const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
-            window.open(whatsappUrl, '_blank');
-        });
+    // Redirection vers WhatsApp avec le message encodé
+    const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+    window.open(whatsappUrl, '_blank');
+});
+
 
         calculateFields(); // Initialize fields on load
     </script>
