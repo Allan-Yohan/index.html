@@ -158,10 +158,11 @@
             const message = `Hello team Akiba.\n\n` +
                 `J'aimerais faire une transaction *${transactionLabel}*.\n\n` +
                 `*Détails*\n` +
-                `Je vous envoie *${total} ${currencies[transaction]}*.\n` +
-                `Mode de paiement : ${modes[transaction]}.\n` +
-                `Le bénéficiaire recevra *${recipientAmountInput.value}*.\n\n` +
-                `*Bénéficiaire*\nNom : ${recipient}\nTéléphone : ${phone}`;
+                `Je vous envoie *${total} ${currencies[transaction]}* par _${modes[transaction]}_.\n` +
+                `Le bénéficiaire recevra *${recipientAmount} ${currencies[transaction]}*.\n\n` +
+                `*Bénéficiaire*\n` +
+                `Nom : ${recipient}\n` +
+                `Numéro : ${phone}`;
 
             const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
             window.open(whatsappUrl, '_blank');
