@@ -1,181 +1,212 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simulateur Akiba</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f9;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
-        .container {
-            background: #fff;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            width: 400px;
-        }
-        h1 {
-            text-align: center;
-            color: #333;
-        }
-        label {
-            display: block;
-            margin-top: 10px;
-        }
-        select, input {
-            width: 100%;
-            padding: 10px;
-            margin-top: 5px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-        }
-        button {
-            width: 100%;
-            background: #007bff;
-            color: #fff;
-            padding: 10px;
-            border: none;
-            border-radius: 5px;
-            margin-top: 15px;
-            cursor: pointer;
-        }
-        button:hover {
-            background: #0056b3;
-        }
-        .output {
-            margin-top: 20px;
-            padding: 10px;
-            background: #e9ecef;
-            border-radius: 5px;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simulateur Akiba</title>
+
+<!-- Google Font -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+    body {
+        font-family: 'Poppins', sans-serif;
+        background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+        margin: 0;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .container {
+        background: #ffffff;
+        width: 420px;
+        padding: 25px;
+        border-radius: 15px;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        animation: fadeIn 0.6s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    h1 {
+        text-align: center;
+        color: #2c5364;
+        margin-bottom: 5px;
+    }
+
+    .subtitle {
+        text-align: center;
+        font-size: 13px;
+        color: #777;
+        margin-bottom: 20px;
+    }
+
+    label {
+        font-size: 13px;
+        margin-top: 12px;
+        display: block;
+        color: #333;
+    }
+
+    select, input {
+        width: 100%;
+        padding: 11px;
+        margin-top: 5px;
+        border-radius: 8px;
+        border: 1px solid #ddd;
+        font-size: 14px;
+    }
+
+    input:disabled {
+        background: #f1f3f5;
+        font-weight: 600;
+        color: #2c5364;
+    }
+
+    button {
+        width: 100%;
+        margin-top: 20px;
+        padding: 13px;
+        background: linear-gradient(135deg, #25D366, #1ebe5d);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-size: 15px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px rgba(37, 211, 102, 0.4);
+    }
+
+    .badge {
+        background: #e7f6ef;
+        color: #1ebe5d;
+        padding: 4px 10px;
+        border-radius: 20px;
+        font-size: 11px;
+        display: inline-block;
+        margin-bottom: 10px;
+    }
+
+</style>
 </head>
+
 <body>
-    <div class="container">
-        <h1>Simulateur Akiba</h1>
 
-        <label for="transaction">Sens de la transaction :</label>
-        <select id="transaction">
-            <option value="gabon-senegal">Gabon → Sénégal</option>
-            <option value="senegal-gabon">Sénégal → Gabon</option>
-        </select>
+<div class="container">
+    <h1>💸 Simulateur Akiba</h1>
+    <div class="subtitle">Estimez vos frais avant l’envoi</div>
 
-        <label for="amount">J'envoie :</label>
-        <input type="number" id="amount" placeholder="Entrez le montant" min="5000" max="500000">
+    <label>Sens de la transaction</label>
+    <select id="transaction">
+        <option value="gabon-senegal">🇬🇦 Gabon → 🇸🇳 Sénégal</option>
+        <option value="gabon-cote_divoire">🇬🇦 Gabon → 🇨🇮 Côte d'Ivoire</option>
+        <option value="senegal-gabon">🇸🇳 Sénégal → 🇬🇦 Gabon</option>
+    </select>
 
-        <label for="fees">Frais :</label>
-        <input type="text" id="fees" disabled>
+    <label>Montant envoyé</label>
+    <input type="number" id="amount" placeholder="Min 5 000 – Max 500 000">
 
-        <label for="total">Total à envoyer à Akiba :</label>
-        <input type="text" id="total" disabled>
+    <label>Frais</label>
+    <input type="text" id="fees" disabled>
 
-        <label for="recipientAmount">Le bénéficiaire recevra :</label>
-        <input type="text" id="recipientAmount" disabled>
+    <label>Total à payer</label>
+    <input type="text" id="total" disabled>
 
-        <label for="recipientName">Nom du bénéficiaire :</label>
-        <input type="text" id="recipientName" placeholder="Nom du bénéficiaire">
+    <label>Montant reçu</label>
+    <input type="text" id="recipientAmount" disabled>
 
-        <label for="recipientPhone">Numéro de téléphone du bénéficiaire :</label>
-        <input type="text" id="recipientPhone" placeholder="Numero de téléphone du bénéficiaire ">
+    <label>Nom du bénéficiaire</label>
+    <input type="text" id="recipientName">
 
-        <button id="whatsapp">Continuer sur WhatsApp</button>
-    </div>
+    <label>Téléphone du bénéficiaire</label>
+    <input type="text" id="recipientPhone">
 
-    <script>
-        const transactionSelect = document.getElementById('transaction');
-        const amountInput = document.getElementById('amount');
-        const feesInput = document.getElementById('fees');
-        const totalInput = document.getElementById('total');
-        const recipientAmountInput = document.getElementById('recipientAmount');
-        const recipientNameInput = document.getElementById('recipientName');
-        const recipientPhoneInput = document.getElementById('recipientPhone');
-        const whatsappButton = document.getElementById('whatsapp');
+    <button id="whatsapp">💬 Continuer sur WhatsApp</button>
+</div>
 
-        const fees = {
-            'gabon-senegal': 0.12,
-            'senegal-gabon': 0.06
-        };
+<script>
+const transactionSelect = document.getElementById('transaction');
+const amountInput = document.getElementById('amount');
+const feesInput = document.getElementById('fees');
+const totalInput = document.getElementById('total');
+const recipientAmountInput = document.getElementById('recipientAmount');
+const recipientNameInput = document.getElementById('recipientName');
+const recipientPhoneInput = document.getElementById('recipientPhone');
+const whatsappButton = document.getElementById('whatsapp');
 
-        const modes = {
-            'gabon-senegal': 'Airtel Money',
-            'senegal-gabon': 'Wave / Orange Money'
-        };
+const fees = {
+    'gabon-senegal': 0.12,
+    'gabon-cote_divoire': 0.14,
+    'senegal-gabon': 0.06
+};
 
-        const currencies = {
-            'gabon-senegal': 'FCFA',
-            'senegal-gabon': 'FCFA'
-        };
+const modes = {
+    'gabon-senegal': 'Airtel Money',
+    'gabon-cote_divoire': 'Orange Money',
+    'senegal-gabon': 'Wave / Orange Money'
+};
 
-        amountInput.addEventListener('input', calculateFields);
+const currency = 'FCFA';
 
-        function calculateFields() {
-            const transaction = transactionSelect.value;
-            let amount = parseFloat(amountInput.value) || 0;
-            if (amount > 500000) amount = 500000;
-            if (amount < 5000) amount = 5000;
-           
+amountInput.addEventListener('input', calculate);
+transactionSelect.addEventListener('change', calculate);
 
-            const feeRate = fees[transaction];
-            const fee = Math.round(amount * feeRate);
-            const total = amount + fee;
-            const recipientAmount = amount;
+function calculate() {
+    let amount = parseFloat(amountInput.value) || 0;
+    amount = Math.min(Math.max(amount, 5000), 500000);
 
-            feesInput.value = fee + ' ' + currencies[transaction];
-            totalInput.value = total + ' ' + currencies[transaction];
-            recipientAmountInput.value = recipientAmount + ' ' + currencies[transaction];
-        }
-
-      whatsappButton.addEventListener('click', () => {
-    const transaction = transactionSelect.value;
-    const amount = parseFloat(amountInput.value);
-    const feeRate = fees[transaction];
-    const fee = Math.round(amount * feeRate);
+    const rate = fees[transactionSelect.value];
+    const fee = Math.round(amount * rate);
     const total = amount + fee;
+
+    feesInput.value = fee.toLocaleString() + ' ' + currency;
+    totalInput.value = total.toLocaleString() + ' ' + currency;
+    recipientAmountInput.value = amount.toLocaleString() + ' ' + currency;
+}
+
+whatsappButton.addEventListener('click', () => {
+    const amount = parseFloat(amountInput.value);
     const recipient = recipientNameInput.value.trim();
     const phone = recipientPhoneInput.value.trim();
 
-    // Vérification des champs obligatoires
-    if (!recipient || isNaN(amount) || amount <= 0 || !phone) {
-        alert('Veuillez remplir tous les champs avant de continuer.');
+    if (!amount || !recipient || !phone) {
+        alert("Veuillez remplir tous les champs.");
         return;
     }
 
-    // Validation du numéro de téléphone selon le sens de la transaction
-    const phonePattern = transaction === 'gabon-senegal'
-        // Sénégal
-       // Gabon
-        
+    const rate = fees[transactionSelect.value];
+    const fee = Math.round(amount * rate);
+    const total = amount + fee;
 
+    const label = transactionSelect.options[transactionSelect.selectedIndex].text;
+    const message =
+`Bonjour Akiba 👋
 
-    // Préparation des données pour le message
-    const transactionLabel = transaction === 'gabon-senegal' ? 'Gabon → Sénégal' : 'Sénégal → Gabon';
-    const whatsappNumber = '+221778731176';
-    const message = `Hello team Akiba.\n\n` +
-        `J'aimerais faire une transaction *${transactionLabel}*.\n\n` +
-        `*Détails*\n` +
-        `Je vous envoie *${total.toLocaleString()} ${currencies[transaction]}* ` +
-        `(montant saisi : ${amount.toLocaleString()} ${currencies[transaction]}, ` +
-        `frais : ${fee.toLocaleString()} ${currencies[transaction]}).\n` +
-        `Mode de paiement : ${modes[transaction]}.\n` +
-        `Le bénéficiaire recevra *${amount.toLocaleString()} ${currencies[transaction]}*.\n\n` +
-        `*Bénéficiaire*\nNom : ${recipient}\nTéléphone : ${phone}`;
+Transaction : ${label}
+Montant envoyé : ${amount.toLocaleString()} FCFA
+Frais : ${fee.toLocaleString()} FCFA
+Total payé : ${total.toLocaleString()} FCFA
+Mode : ${modes[transactionSelect.value]}
 
-    // Redirection vers WhatsApp avec le message encodé
-    const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
-    window.open(whatsappUrl, '_blank');
+Bénéficiaire :
+Nom : ${recipient}
+Téléphone : ${phone}`;
+
+    window.open(`https://wa.me/221778731176?text=${encodeURIComponent(message)}`, '_blank');
 });
 
+calculate();
+</script>
 
-        calculateFields(); // Initialize fields on load
-    </script>
 </body>
 </html>
-
