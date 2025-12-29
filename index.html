@@ -194,3 +194,251 @@ calculate();
 </body>
 </html>
 
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Akiba Transfer</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container {
+    background: #fff;
+    width: 420px;
+    padding: 25px;
+    border-radius: 18px;
+    box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+}
+
+h1 {
+    text-align: center;
+    color: #2c5364;
+    margin-bottom: 5px;
+}
+
+.subtitle {
+    text-align: center;
+    font-size: 13px;
+    color: #666;
+    margin-bottom: 15px;
+}
+
+label {
+    font-size: 13px;
+    margin-top: 10px;
+    display: block;
+}
+
+select, input {
+    width: 100%;
+    padding: 11px;
+    margin-top: 5px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    font-size: 14px;
+}
+
+input:disabled {
+    background: #f1f3f5;
+    font-weight: 600;
+}
+
+.badge {
+    text-align: center;
+    background: #e7f6ef;
+    color: #1ebe5d;
+    padding: 6px;
+    border-radius: 20px;
+    font-size: 12px;
+    margin-bottom: 15px;
+}
+
+.ticket {
+    margin-top: 20px;
+    background: #f8f9fa;
+    border-radius: 14px;
+    padding: 18px;
+    border: 1px dashed #ccc;
+}
+
+.ticket h3 {
+    text-align: center;
+    margin: 0 0 10px;
+    color: #2c5364;
+    font-size: 15px;
+}
+
+.ticket-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    margin: 6px 0;
+}
+
+.ticket-row.total {
+    font-weight: 600;
+    border-top: 1px dashed #bbb;
+    padding-top: 8px;
+    margin-top: 10px;
+}
+
+button {
+    width: 100%;
+    margin-top: 20px;
+    padding: 14px;
+    background: linear-gradient(135deg, #25D366, #1ebe5d);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+    <h1>💸 Akiba Transfer</h1>
+    <div class="subtitle">Simulation & reçu de transaction</div>
+
+    <div class="badge">Paiement sécurisé • Airtel Money</div>
+
+    <label>Corridor</label>
+    <select id="transaction">
+        <option value="gabon-senegal">🇬🇦 Gabon → 🇸🇳 Sénégal</option>
+        <option value="gabon-uemoa">🇬🇦 Gabon → UEMOA</option>
+        <option value="senegal-gabon">🇸🇳 Sénégal → 🇬🇦 Gabon</option>
+    </select>
+
+    <label>Montant transféré (FCFA)</label>
+    <input type="number" id="amount" placeholder="Min 5 000 – Max 500 000">
+
+    <label>Nom du bénéficiaire</label>
+    <input type="text" id="recipientName">
+
+    <label>Téléphone du bénéficiaire</label>
+    <input type="text" id="recipientPhone">
+
+    <!-- TICKET -->
+    <div class="ticket" id="ticket">
+        <h3>🧾 Ticket de transaction</h3>
+
+        <div class="ticket-row">
+            <span>Montant transféré</span>
+            <span id="t-amount">—</span>
+        </div>
+
+        <div class="ticket-row">
+            <span>Frais de service</span>
+            <span id="t-fees">—</span>
+        </div>
+
+        <div class="ticket-row total">
+            <span>Total à envoyer</span>
+            <span id="t-total">—</span>
+        </div>
+
+        <div class="ticket-row">
+            <span>Mode de paiement</span>
+            <span>Airtel Money</span>
+        </div>
+    </div>
+
+    <button id="whatsapp">💬 Continuer sur WhatsApp</button>
+</div>
+
+<script>
+const amountInput = document.getElementById('amount');
+const transactionSelect = document.getElementById('transaction');
+
+const tAmount = document.getElementById('t-amount');
+const tFees = document.getElementById('t-fees');
+const tTotal = document.getElementById('t-total');
+
+const recipientNameInput = document.getElementById('recipientName');
+const recipientPhoneInput = document.getElementById('recipientPhone');
+const whatsappButton = document.getElementById('whatsapp');
+
+const currency = 'FCFA';
+
+const feeRates = {
+    'gabon-senegal': 0.12,
+    'gabon-uemoa': 0.13,
+    'senegal-gabon': 0.06
+};
+
+function calculate() {
+    let amount = parseFloat(amountInput.value) || 0;
+    amount = Math.min(Math.max(amount, 5000), 500000);
+
+    const rate = feeRates[transactionSelect.value];
+    const fee = Math.round(amount * rate);
+    const total = amount + fee;
+
+    tAmount.textContent = `${amount.toLocaleString()} ${currency}`;
+    tFees.textContent = `${fee.toLocaleString()} ${currency} (${rate * 100}%)`;
+    tTotal.textContent = `${total.toLocaleString()} ${currency}`;
+}
+
+amountInput.addEventListener('input', calculate);
+transactionSelect.addEventListener('change', calculate);
+
+whatsappButton.addEventListener('click', () => {
+    const amount = parseFloat(amountInput.value);
+    const recipient = recipientNameInput.value.trim();
+    const phone = recipientPhoneInput.value.trim();
+
+    if (!amount || !recipient || !phone) {
+        alert("Veuillez remplir tous les champs.");
+        return;
+    }
+
+    const rate = feeRates[transactionSelect.value];
+    const fee = Math.round(amount * rate);
+    const total = amount + fee;
+
+    const label = transactionSelect.options[transactionSelect.selectedIndex].text;
+
+    const message =
+`Bonjour Akiba 👋
+
+Je souhaite effectuer un transfert.
+
+Corridor : ${label}
+
+Montant total envoyé : ${total.toLocaleString()} FCFA
+(dont ${amount.toLocaleString()} FCFA + ${fee.toLocaleString()} FCFA de frais)
+
+Mode de paiement : Airtel Money
+
+Bénéficiaire :
+Nom : ${recipient}
+Téléphone : ${phone}
+
+Merci.`;
+
+    window.open(`https://wa.me/221778731176?text=${encodeURIComponent(message)}`, '_blank');
+});
+
+calculate();
+</script>
+
+</body>
+</html>
+
+
+
