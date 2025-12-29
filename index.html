@@ -109,7 +109,7 @@
     <label>Sens de la transaction</label>
     <select id="transaction">
         <option value="gabon-senegal">🇬🇦 Gabon → 🇸🇳 Sénégal</option>
-        <option value="gabon-cote_divoire">🇬🇦 Gabon → 🇨🇮 Côte d'Ivoire</option>
+        <option value="gabon-autres_pays_UEMOA">🇬🇦 Gabon → Autres Pays de l'UEMOA hors Sénégal</option>
         <option value="senegal-gabon">🇸🇳 Sénégal → 🇬🇦 Gabon</option>
     </select>
 
@@ -146,13 +146,13 @@ const whatsappButton = document.getElementById('whatsapp');
 
 const fees = {
     'gabon-senegal': 0.12,
-    'gabon-cote_divoire': 0.14,
+    'gabon-Autres_Pays_UEMOA': 0.13,
     'senegal-gabon': 0.06
 };
 
 const modes = {
     'gabon-senegal': 'Airtel Money',
-    'gabon-cote_divoire': 'Orange Money',
+    'gabon-cote_divoire': 'Wave / Orange Money',
     'senegal-gabon': 'Wave / Orange Money'
 };
 
@@ -192,11 +192,14 @@ whatsappButton.addEventListener('click', () => {
     const message =
 `Bonjour Akiba 👋
 
-Transaction : ${label}
-Montant envoyé : ${amount.toLocaleString()} FCFA
+J'aimerais faire une transaction : ${label}
+
+Details
+Je vous envoie : ${amount.toLocaleString()} FCFA
 Frais : ${fee.toLocaleString()} FCFA
 Total payé : ${total.toLocaleString()} FCFA
 Mode : ${modes[transactionSelect.value]}
+Le bénéficiaire recevra: ${amount.toLocaleString()} FCFA
 
 Bénéficiaire :
 Nom : ${recipient}
@@ -210,3 +213,4 @@ calculate();
 
 </body>
 </html>
+
