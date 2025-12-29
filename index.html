@@ -192,18 +192,22 @@ whatsappButton.addEventListener('click', () => {
     const message =
 `Bonjour Akiba 👋
 
-J'aimerais faire une transaction : ${label}
+const message =
+`Bonjour Akiba 👋
 
-Details
-Je vous envoie : ${amount.toLocaleString()} FCFA
-Frais : ${fee.toLocaleString()} FCFA
-Total payé : ${total.toLocaleString()} FCFA
-Mode : ${modes[transactionSelect.value]}
-Le bénéficiaire recevra: ${amount.toLocaleString()} FCFA
+J’aimerais effectuer une transaction via votre service.
+
+Transaction : ${label}
+
+Je vous envoie : ${total.toLocaleString()} FCFA (montant saisi ${amount.toLocaleString()} + frais ${fee.toLocaleString()})
+Mode de paiement : Airtel Money
+
+Le bénéficiaire recevra : ${amount.toLocaleString()} FCFA
 
 Bénéficiaire :
 Nom : ${recipient}
 Téléphone : ${phone}`;
+
 
     window.open(`https://wa.me/221778731176?text=${encodeURIComponent(message)}`, '_blank');
 });
@@ -213,4 +217,5 @@ calculate();
 
 </body>
 </html>
+
 
