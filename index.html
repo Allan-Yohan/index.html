@@ -5,174 +5,151 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Simulateur Akiba</title>
 
-<!-- Google Font -->
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 
 <style>
-    body {
-        font-family: 'Poppins', sans-serif;
-        background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-        margin: 0;
-        height: 100vh;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
+body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+}
 
-    .container {
-        background: #ffffff;
-        width: 420px;
-        padding: 25px;
-        border-radius: 15px;
-        box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-        animation: fadeIn 0.6s ease-in-out;
-    }
+.container {
+    background: #fff;
+    width: 420px;
+    padding: 25px;
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+}
 
-    @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(20px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
+h1 {
+    text-align: center;
+    color: #2c5364;
+    margin-bottom: 5px;
+}
 
-    h1 {
-        text-align: center;
-        color: #2c5364;
-        margin-bottom: 5px;
-    }
+.subtitle {
+    text-align: center;
+    font-size: 13px;
+    color: #666;
+    margin-bottom: 20px;
+}
 
-    .subtitle {
-        text-align: center;
-        font-size: 13px;
-        color: #777;
-        margin-bottom: 20px;
-    }
+label {
+    font-size: 13px;
+    margin-top: 12px;
+    display: block;
+    color: #333;
+}
 
-    label {
-        font-size: 13px;
-        margin-top: 12px;
-        display: block;
-        color: #333;
-    }
+select, input {
+    width: 100%;
+    padding: 11px;
+    margin-top: 5px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    font-size: 14px;
+}
 
-    select, input {
-        width: 100%;
-        padding: 11px;
-        margin-top: 5px;
-        border-radius: 8px;
-        border: 1px solid #ddd;
-        font-size: 14px;
-    }
+input:disabled {
+    background: #f1f3f5;
+    font-weight: 600;
+    color: #2c5364;
+}
 
-    input:disabled {
-        background: #f1f3f5;
-        font-weight: 600;
-        color: #2c5364;
-    }
+.badge {
+    background: #e7f6ef;
+    color: #1ebe5d;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    display: inline-block;
+    margin-bottom: 10px;
+}
 
-    button {
-        width: 100%;
-        margin-top: 20px;
-        padding: 13px;
-        background: linear-gradient(135deg, #25D366, #1ebe5d);
-        color: white;
-        border: none;
-        border-radius: 10px;
-        font-size: 15px;
-        font-weight: 600;
-        cursor: pointer;
-        transition: transform 0.2s, box-shadow 0.2s;
-    }
-
-    button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 10px 20px rgba(37, 211, 102, 0.4);
-    }
-
-    .badge {
-        background: #e7f6ef;
-        color: #1ebe5d;
-        padding: 4px 10px;
-        border-radius: 20px;
-        font-size: 11px;
-        display: inline-block;
-        margin-bottom: 10px;
-    }
-
+button {
+    width: 100%;
+    margin-top: 20px;
+    padding: 14px;
+    background: linear-gradient(135deg, #25D366, #1ebe5d);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+}
 </style>
 </head>
 
 <body>
 
 <div class="container">
-    <h1>💸 Simulateur Akiba</h1>
-    <div class="subtitle">Estimez vos frais avant l’envoi</div>
+    <h1>💸 Akiba Transfer</h1>
+    <div class="subtitle">Simulation sécurisée & transparente</div>
 
-    <label>Sens de la transaction</label>
+    <div class="badge">Paiement : Airtel Money</div>
+
+    <label>Corridor de transfert</label>
     <select id="transaction">
         <option value="gabon-senegal">🇬🇦 Gabon → 🇸🇳 Sénégal</option>
-        <option value="gabon-autres_pays_UEMOA">🇬🇦 Gabon → Autres Pays de l'UEMOA hors Sénégal</option>
+        <option value="gabon-uemoa">🇬🇦 Gabon → Autres pays UEMOA</option>
         <option value="senegal-gabon">🇸🇳 Sénégal → 🇬🇦 Gabon</option>
     </select>
 
-    <label>Montant envoyé</label>
+    <label>Montant à transférer (FCFA)</label>
     <input type="number" id="amount" placeholder="Min 5 000 – Max 500 000">
 
-    <label>Frais</label>
+    <label>Frais de service</label>
     <input type="text" id="fees" disabled>
 
-    <label>Total à payer</label>
-    <input type="text" id="total" disabled>
-
-    <label>Montant reçu</label>
+    <label>Montant reçu par le bénéficiaire</label>
     <input type="text" id="recipientAmount" disabled>
 
     <label>Nom du bénéficiaire</label>
-    <input type="text" id="recipientName">
+    <input type="text" id="recipientName" placeholder="Nom complet">
 
     <label>Téléphone du bénéficiaire</label>
-    <input type="text" id="recipientPhone">
+    <input type="text" id="recipientPhone" placeholder="+221 / +241">
 
     <button id="whatsapp">💬 Continuer sur WhatsApp</button>
 </div>
 
 <script>
-const transactionSelect = document.getElementById('transaction');
 const amountInput = document.getElementById('amount');
 const feesInput = document.getElementById('fees');
-const totalInput = document.getElementById('total');
 const recipientAmountInput = document.getElementById('recipientAmount');
+const transactionSelect = document.getElementById('transaction');
+
 const recipientNameInput = document.getElementById('recipientName');
 const recipientPhoneInput = document.getElementById('recipientPhone');
 const whatsappButton = document.getElementById('whatsapp');
 
-const fees = {
-    'gabon-senegal': 0.12,
-    'gabon-Autres_Pays_UEMOA': 0.13,
-    'senegal-gabon': 0.06
-};
-
-const modes = {
-    'gabon-senegal': 'Airtel Money',
-    'gabon-cote_divoire': 'Wave / Orange Money',
-    'senegal-gabon': 'Wave / Orange Money'
-};
-
 const currency = 'FCFA';
 
-amountInput.addEventListener('input', calculate);
-transactionSelect.addEventListener('change', calculate);
+const feeRates = {
+    'gabon-senegal': 0.12,
+    'gabon-uemoa': 0.13,
+    'senegal-gabon': 0.06
+};
 
 function calculate() {
     let amount = parseFloat(amountInput.value) || 0;
     amount = Math.min(Math.max(amount, 5000), 500000);
 
-    const rate = fees[transactionSelect.value];
+    const rate = feeRates[transactionSelect.value];
     const fee = Math.round(amount * rate);
-    const total = amount + fee;
 
-    feesInput.value = fee.toLocaleString() + ' ' + currency;
-    totalInput.value = total.toLocaleString() + ' ' + currency;
-    recipientAmountInput.value = amount.toLocaleString() + ' ' + currency;
+    feesInput.value = `${fee.toLocaleString()} ${currency} (${rate * 100}% frais)`;
+    recipientAmountInput.value = `${amount.toLocaleString()} ${currency}`;
 }
+
+amountInput.addEventListener('input', calculate);
+transactionSelect.addEventListener('change', calculate);
 
 whatsappButton.addEventListener('click', () => {
     const amount = parseFloat(amountInput.value);
@@ -180,34 +157,33 @@ whatsappButton.addEventListener('click', () => {
     const phone = recipientPhoneInput.value.trim();
 
     if (!amount || !recipient || !phone) {
-        alert("Veuillez remplir tous les champs.");
+        alert("Veuillez compléter tous les champs.");
         return;
     }
 
-    const rate = fees[transactionSelect.value];
+    const rate = feeRates[transactionSelect.value];
     const fee = Math.round(amount * rate);
     const total = amount + fee;
 
     const label = transactionSelect.options[transactionSelect.selectedIndex].text;
+
     const message =
 `Bonjour Akiba 👋
 
-const message =
-`Bonjour Akiba 👋
+Je souhaite effectuer un transfert via votre service.
 
-J’aimerais effectuer une transaction via votre service.
+Corridor : ${label}
 
-Transaction : ${label}
+Montant total envoyé : ${total.toLocaleString()} FCFA
+(dont ${amount.toLocaleString()} FCFA transférés + ${fee.toLocaleString()} FCFA de frais)
 
-Je vous envoie : ${total.toLocaleString()} FCFA (montant saisi ${amount.toLocaleString()} + frais ${fee.toLocaleString()})
 Mode de paiement : Airtel Money
-
-Le bénéficiaire recevra : ${amount.toLocaleString()} FCFA
 
 Bénéficiaire :
 Nom : ${recipient}
-Téléphone : ${phone}`;
+Téléphone : ${phone}
 
+Merci.`;
 
     window.open(`https://wa.me/221778731176?text=${encodeURIComponent(message)}`, '_blank');
 });
@@ -217,5 +193,3 @@ calculate();
 
 </body>
 </html>
-
-
