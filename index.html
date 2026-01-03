@@ -1,244 +1,324 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Akiba Transfer</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Akiba Transfert - Simulateur</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1e3a8a; /* Bleu profond */
+            --accent: #10b981;  /* Vert émeraude */
+            --whatsapp: #25D366;
+            --bg: #f8fafc;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+        }
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #e0e7ff 0%, #f8fafc 100%);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: var(--text-main);
+        }
 
-<style>
-body {
-    font-family: 'Poppins', sans-serif;
-    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-    margin: 0;
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
+        .container {
+            background: #ffffff;
+            padding: 35px;
+            border-radius: 24px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            width: 100%;
+            max-width: 480px;
+        }
 
-.container {
-    background: #fff;
-    width: 420px;
-    padding: 25px;
-    border-radius: 18px;
-    box-shadow: 0 25px 50px rgba(0,0,0,0.3);
-}
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
 
-h1 {
-    text-align: center;
-    color: #2c5364;
-    margin-bottom: 5px;
-}
+        .header h1 {
+            margin: 0;
+            font-size: 1.8rem;
+            color: var(--primary);
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
 
-.subtitle {
-    text-align: center;
-    font-size: 13px;
-    color: #666;
-    margin-bottom: 15px;
-}
+        .header p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
 
-label {
-    font-size: 13px;
-    margin-top: 10px;
-    display: block;
-}
+        .section-title {
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin: 25px 0 15px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
 
-select, input {
-    width: 100%;
-    padding: 11px;
-    margin-top: 5px;
-    border-radius: 8px;
-    border: 1px solid #ddd;
-    font-size: 14px;
-}
+        .section-title::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: #e2e8f0;
+        }
 
-input:disabled {
-    background: #f1f3f5;
-    font-weight: 600;
-}
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
 
-.badge {
-    text-align: center;
-    background: #e7f6ef;
-    color: #1ebe5d;
-    padding: 6px;
-    border-radius: 20px;
-    font-size: 12px;
-    margin-bottom: 15px;
-}
+        select, input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #f1f5f9;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: #f8fafc;
+            box-sizing: border-box;
+        }
 
-.ticket {
-    margin-top: 20px;
-    background: #f8f9fa;
-    border-radius: 14px;
-    padding: 18px;
-    border: 1px dashed #ccc;
-}
+        select:focus, input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: #fff;
+            box-shadow: 0 0 0 4px rgba(30, 58, 138, 0.1);
+        }
 
-.ticket h3 {
-    text-align: center;
-    margin: 0 0 10px;
-    color: #2c5364;
-    font-size: 15px;
-}
+        /* Cartes de résultat */
+        .result-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 15px;
+        }
 
-.ticket-row {
-    display: flex;
-    justify-content: space-between;
-    font-size: 13px;
-    margin: 6px 0;
-}
+        .result-card {
+            background: #f1f5f9;
+            padding: 12px;
+            border-radius: 12px;
+            text-align: center;
+        }
 
-.ticket-row.total {
-    font-weight: 600;
-    border-top: 1px dashed #bbb;
-    padding-top: 8px;
-    margin-top: 10px;
-}
+        .result-card span {
+            display: block;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-bottom: 5px;
+        }
 
-button {
-    width: 100%;
-    margin-top: 20px;
-    padding: 14px;
-    background: linear-gradient(135deg, #25D366, #1ebe5d);
-    color: white;
-    border: none;
-    border-radius: 12px;
-    font-size: 15px;
-    font-weight: 600;
-    cursor: pointer;
-}
-</style>
+        .result-card strong {
+            font-size: 1.1rem;
+            color: var(--primary);
+        }
+
+        .highlight-card {
+            background: #ecfdf5;
+            border: 1px solid #d1fae5;
+            padding: 20px;
+            border-radius: 16px;
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .highlight-card strong {
+            font-size: 1.5rem;
+            color: var(--accent);
+            display: block;
+        }
+
+        .limit-info {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 6px;
+            text-align: right;
+        }
+
+        button {
+            width: 100%;
+            background: var(--whatsapp);
+            color: #fff;
+            padding: 16px;
+            border: none;
+            border-radius: 16px;
+            margin-top: 30px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: transform 0.2s, background 0.3s;
+            box-shadow: 0 10px 15px -3px rgba(37, 211, 102, 0.3);
+        }
+
+        button:hover {
+            background: #1eb956;
+            transform: translateY(-2px);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .error-text {
+            color: #ef4444;
+            font-size: 0.8rem;
+            margin-top: 5px;
+            display: none;
+        }
+    </style>
 </head>
-
 <body>
 
 <div class="container">
-    <h1>💸 Akiba Transfer</h1>
-    <div class="subtitle">Simulation & reçu de transaction</div>
+    <div class="header">
+        <h1>Akiba Transfert 🚀</h1>
+        <p>Rapide • Sécurisé • Transparent</p>
+    </div>
 
-    <div class="badge">Paiement sécurisé • Airtel Money</div>
-
-    <label>Corridor</label>
+    <label for="transaction">Type de transfert</label>
     <select id="transaction">
         <option value="gabon-senegal">🇬🇦 Gabon → 🇸🇳 Sénégal</option>
-        <option value="gabon-uemoa">🇬🇦 Gabon → UEMOA</option>
+        <option value="gabon-UEMOA">🇬🇦 Gabon → 🌍 Zone UEMOA</option>
         <option value="senegal-gabon">🇸🇳 Sénégal → 🇬🇦 Gabon</option>
+        <option value="UEMOA-gabon">🌍 Zone UEMOA → 🇬🇦 Gabon</option>
     </select>
 
-    <label>Montant transféré (FCFA)</label>
-    <input type="number" id="amount" placeholder="Min 5 000 – Max 500 000">
+    <div class="section-title">Calcul du montant</div>
+    
+    <label for="amount">Montant à envoyer</label>
+    <input type="number" id="amount" placeholder="Entrez le montant (ex: 50000)" min="5000" max="500000">
+    <div class="limit-info">Limites : 5 000 - 500 000 FCFA</div>
 
-    <label>Nom du bénéficiaire</label>
-    <input type="text" id="recipientName">
-
-    <label>Téléphone du bénéficiaire</label>
-    <input type="text" id="recipientPhone">
-
-    <!-- TICKET -->
-    <div class="ticket" id="ticket">
-        <h3>🧾 Ticket de transaction</h3>
-
-        <div class="ticket-row">
-            <span>Montant transféré</span>
-            <span id="t-amount">—</span>
+    <div class="result-grid">
+        <div class="result-card">
+            <span>Frais Akiba</span>
+            <strong id="feesDisplay">0 FCFA</strong>
         </div>
-
-        <div class="ticket-row">
-            <span>Frais de service</span>
-            <span id="t-fees">—</span>
-        </div>
-
-        <div class="ticket-row total">
-            <span>Total à envoyer</span>
-            <span id="t-total">—</span>
-        </div>
-
-        <div class="ticket-row">
-            <span>Mode de paiement</span>
-            <span>Airtel Money</span>
+        <div class="result-card">
+            <span>Total à payer</span>
+            <strong id="totalDisplay" style="color: #ef4444;">0 FCFA</strong>
         </div>
     </div>
 
-    <button id="whatsapp">💬 Continuer sur WhatsApp</button>
+    <div class="highlight-card">
+        <span>Le bénéficiaire recevra exactement :</span>
+        <strong id="recipientAmountDisplay">0 FCFA</strong>
+    </div>
+
+    <div class="section-title">Coordonnées</div>
+
+    <label for="recipientName">Nom complet du bénéficiaire</label>
+    <input type="text" id="recipientName" placeholder="Ex: Jean Dupont">
+
+    <label for="recipientPhone">Numéro de téléphone</label>
+    <input type="tel" id="recipientPhone" placeholder="">
+
+    <button id="whatsapp">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.89 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.743-.981z"/>
+        </svg>
+        Continuer sur WhatsApp
+    </button>
 </div>
 
 <script>
-const amountInput = document.getElementById('amount');
-const transactionSelect = document.getElementById('transaction');
+    const transactionSelect = document.getElementById('transaction');
+    const amountInput = document.getElementById('amount');
+    const recipientNameInput = document.getElementById('recipientName');
+    const recipientPhoneInput = document.getElementById('recipientPhone');
+    const whatsappButton = document.getElementById('whatsapp');
+    
+    // Affichages
+    const feesDisplay = document.getElementById('feesDisplay');
+    const totalDisplay = document.getElementById('totalDisplay');
+    const recipientAmountDisplay = document.getElementById('recipientAmountDisplay');
+    const phoneError = document.getElementById('phoneError');
 
-const tAmount = document.getElementById('t-amount');
-const tFees = document.getElementById('t-fees');
-const tTotal = document.getElementById('t-total');
+    const CONFIG = {
+        'gabon-senegal': { fee: 0.12, mode: 'Airtel Money', currency: 'FCFA', label: 'Gabon 🇬🇦 → Sénégal 🇸🇳' },
+        'senegal-gabon': { fee: 0.06, mode: 'Wave / Orange Money', currency: 'FCFA', label: 'Sénégal 🇸🇳 → Gabon 🇬🇦' },
+        'gabon-UEMOA':   { fee: 0.13, mode: 'Airtel Money', currency: 'FCFA', label: 'Gabon 🇬🇦 → Zone UEMOA 🌍' },
+        'UEMOA-gabon':   { fee: 0.06, mode: 'Airtel Money', currency: 'FCFA', label: 'Zone UEMOA 🌍 → Gabon 🇬🇦' }
+    };
 
-const recipientNameInput = document.getElementById('recipientName');
-const recipientPhoneInput = document.getElementById('recipientPhone');
-const whatsappButton = document.getElementById('whatsapp');
+    function calculateFields() {
+        const transType = transactionSelect.value;
+        const amount = parseFloat(amountInput.value) || 0;
+        const config = CONFIG[transType];
 
-const currency = 'FCFA';
+        const fee = Math.round(amount * config.fee);
+        const total = amount + fee;
 
-const feeRates = {
-    'gabon-senegal': 0.12,
-    'gabon-uemoa': 0.13,
-    'senegal-gabon': 0.06
-};
-
-function calculate() {
-    let amount = parseFloat(amountInput.value) || 0;
-    amount = Math.min(Math.max(amount, 5000), 500000);
-
-    const rate = feeRates[transactionSelect.value];
-    const fee = Math.round(amount * rate);
-    const total = amount + fee;
-
-    tAmount.textContent = `${amount.toLocaleString()} ${currency}`;
-    tFees.textContent = `${fee.toLocaleString()} ${currency} (${rate * 100}%)`;
-    tTotal.textContent = `${total.toLocaleString()} ${currency}`;
-}
-
-amountInput.addEventListener('input', calculate);
-transactionSelect.addEventListener('change', calculate);
-
-whatsappButton.addEventListener('click', () => {
-    const amount = parseFloat(amountInput.value);
-    const recipient = recipientNameInput.value.trim();
-    const phone = recipientPhoneInput.value.trim();
-
-    if (!amount || !recipient || !phone) {
-        alert("Veuillez remplir tous les champs.");
-        return;
+        feesDisplay.innerText = `${fee.toLocaleString()} ${config.currency}`;
+        totalDisplay.innerText = `${total.toLocaleString()} ${config.currency}`;
+        recipientAmountDisplay.innerText = `${amount.toLocaleString()} ${config.currency}`;
     }
 
-    const rate = feeRates[transactionSelect.value];
-    const fee = Math.round(amount * rate);
-    const total = amount + fee;
+    amountInput.addEventListener('input', calculateFields);
+    transactionSelect.addEventListener('change', calculateFields);
 
-    const label = transactionSelect.options[transactionSelect.selectedIndex].text;
+    function validatePhone(phone, type) {
+        const cleanPhone = phone.replace(/\s/g, '');
+        // Validation basique (longueur entre 8 et 12 chiffres selon pays)
+        return /^[0-9]{8,12}$/.test(cleanPhone);
+    }
 
-    const message =
-`Bonjour Akiba 👋
+    whatsappButton.addEventListener('click', () => {
+        const transType = transactionSelect.value;
+        const amount = parseFloat(amountInput.value);
+        const recipient = recipientNameInput.value.trim();
+        const phone = recipientPhoneInput.value.trim();
+        const config = CONFIG[transType];
 
-Je souhaite effectuer un transfert.
+        if (isNaN(amount) || amount < 5000 || amount > 500000) {
+            alert('Veuillez entrer un montant valide entre 5.000 et 500.000 FCFA');
+            return;
+        }
+        if (!recipient || !validatePhone(phone, transType)) {
+            phoneError.style.display = 'block';
+            alert('Veuillez remplir correctement les informations du bénéficiaire.');
+            return;
+        }
+        phoneError.style.display = 'none';
 
-Corridor : ${label}
+        const fee = Math.round(amount * config.fee);
+        const total = amount + fee;
 
-Montant total envoyé : ${total.toLocaleString()} FCFA
-(dont ${amount.toLocaleString()} FCFA + ${fee.toLocaleString()} FCFA de frais)
+       const message = `*Nouvelle Transaction Akiba*\n\n` +
+                `*Type :* ${transactionLabel}\n` +
+                `*Je paye au total :* ${total.toLocaleString()} ${config.currency}\n` +
+                `--------------------------\n` +
+                `*Détails :*\n` +
+                `- Montant : ${amount.toLocaleString()} ${config.currency}\n` +
+                `- Frais : ${fee.toLocaleString()} ${config.currency}\n` +
+                `- Mode : ${config.mode}\n\n` +
+                `*Bénéficiaire :*\n` +
+                `- Nom : ${recipient}\n` +
+                `- Téléphone : ${phone}\n\n` +
+                `*Le bénéficiaire recevra : ${amount.toLocaleString()} ${config.currency}*`;
 
-Mode de paiement : Airtel Money
+            const whatsappNumber = '221778731176';
+            const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+            window.open(whatsappUrl, '_blank');
+        });
 
-Bénéficiaire :
-Nom : ${recipient}
-Téléphone : ${phone}
-
-Merci.`;
-
-    window.open(`https://wa.me/221778731176?text=${encodeURIComponent(message)}`, '_blank');
-});
-
-calculate();
+    calculateFields();
 </script>
 
 </body>
