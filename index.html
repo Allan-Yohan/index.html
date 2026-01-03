@@ -98,7 +98,6 @@
             box-shadow: 0 0 0 4px rgba(30, 58, 138, 0.1);
         }
 
-        /* Cartes de résultat */
         .result-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -224,12 +223,13 @@
     <div class="section-title">Coordonnées</div>
 
     <label for="recipientName">Nom complet du bénéficiaire</label>
-    <input type="text" id="recipientName" placeholder="Ex: Jean Dupont">
+    <input type="text" id="recipientName" placeholder="">
 
     <label for="recipientPhone">Numéro de téléphone</label>
     <input type="tel" id="recipientPhone" placeholder="">
+    <div id="phoneError" class="error-text">⚠️ Veuillez vérifier les informations.</div>
 
-    <button id="whatsapp">🚀 Envoyer sur WhatsApp</button>
+    <button id="whatsapp">🚀 Continuer sur WhatsApp</button>
 </div>
 
 <script>
@@ -239,7 +239,6 @@
     const recipientPhoneInput = document.getElementById('recipientPhone');
     const whatsappButton = document.getElementById('whatsapp');
     
-    // Affichages
     const feesDisplay = document.getElementById('feesDisplay');
     const totalDisplay = document.getElementById('totalDisplay');
     const recipientAmountDisplay = document.getElementById('recipientAmountDisplay');
@@ -268,12 +267,6 @@
     amountInput.addEventListener('input', calculateFields);
     transactionSelect.addEventListener('change', calculateFields);
 
-    function validatePhone(phone, type) {
-        const cleanPhone = phone.replace(/\s/g, '');
-        // Validation basique (longueur entre 8 et 12 chiffres selon pays)
-        return /^[0-9]{8,12}$/.test(cleanPhone);
-    }
-
     whatsappButton.addEventListener('click', () => {
         const transType = transactionSelect.value;
         const amount = parseFloat(amountInput.value);
@@ -281,13 +274,14 @@
         const phone = recipientPhoneInput.value.trim();
         const config = CONFIG[transType];
 
+        // Validation
         if (isNaN(amount) || amount < 5000 || amount > 500000) {
             alert('Veuillez entrer un montant valide entre 5.000 et 500.000 FCFA');
             return;
         }
-        if (!recipient || !validatePhone(phone, transType)) {
+        if (!recipient || !phone) {
             phoneError.style.display = 'block';
-            alert('Veuillez remplir correctement les informations du bénéficiaire.');
+            alert('Veuillez remplir le nom et le téléphone du bénéficiaire.');
             return;
         }
         phoneError.style.display = 'none';
@@ -295,27 +289,28 @@
         const fee = Math.round(amount * config.fee);
         const total = amount + fee;
 
-       const message = `*Nouvelle Transaction Akiba*\n\n` +
-                `*Type :* ${transactionLabel}\n` +
-                `*Je paye au total :* ${total.toLocaleString()} ${config.currency}\n` +
-                `--------------------------\n` +
-                `*Détails :*\n` +
-                `- Montant : ${amount.toLocaleString()} ${config.currency}\n` +
-                `- Frais : ${fee.toLocaleString()} ${config.currency}\n` +
-                `- Mode : ${config.mode}\n\n` +
-                `*Bénéficiaire :*\n` +
-                `- Nom : ${recipient}\n` +
-                `- Téléphone : ${phone}\n\n` +
-                `*Le bénéficiaire recevra : ${amount.toLocaleString()} ${config.currency}*`;
+        // Préparation du message
+        const message = `*NOUVELLE TRANSACTION AKIBA*\n\n` +
+            `*Sens :* ${config.label}\n` +
+            `*Je paye au total :* ${total.toLocaleString()} ${config.currency}\n` +
+            `--------------------------\n` +
+            `*Détails :*\n` +
+            `- Montant envoyé : ${amount.toLocaleString()} ${config.currency}\n` +
+            `- Frais : ${fee.toLocaleString()} ${config.currency}\n` +
+            `- Mode : ${config.mode}\n\n` +
+            `*BÉNÉFICIAIRE*\n` +
+            `- Nom : ${recipient}\n` +
+            `- Tél : ${phone}\n\n` +
+            `*Le bénéficiaire recevra : ${amount.toLocaleString()} ${config.currency}*`;
 
-            const whatsappNumber = '221778731176';
-            const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
-            window.open(whatsappUrl, '_blank');
-        });
+        const whatsappNumber = '221778731176';
+        const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+        
+        window.open(whatsappUrl, '_blank');
+    });
 
     calculateFields();
 </script>
 
 </body>
 </html>
-
